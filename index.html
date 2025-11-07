@@ -2779,7 +2779,55 @@
                 </button>
             </div>
         </div>
+      <!-- Send Transaction Modal -->
+    <div id="sendModal" class="send-modal hidden">
+        <div class="send-modal-content fade-in-up">
+            <div class="send-header">
+                <div class="send-icon">
+                    <i class="fas fa-paper-plane"></i>
+                </div>
+                <div class="send-details">
+                    <h3 style="margin: 0; color: #2d3748;">Send Crypto</h3>
+                    <p style="margin: 0; color: #718096;">Transfer to any BSC address</p>
+                </div>
+            </div>
 
+            <input type="text" id="sendAmount" class="send-amount-input" placeholder="0.00">
+
+            <div class="currency-selector">
+                <div class="currency-option active">BNB</div>
+                <div class="currency-option">USDT</div>
+                <div class="currency-option">USDC</div>
+            </div>
+
+            <div class="address-input-group">
+                <label style="display: block; text-align: left; margin-bottom: 0.5rem; color: #4a5568; font-weight: 600;">
+                    Recipient Address
+                </label>
+                <input type="text" id="recipientAddress" class="address-input" placeholder="0x...">
+            </div>
+
+            <div style="background: #f7fafc; padding: 1rem; border-radius: 12px; margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                    <span style="color: #718096;">Network Fee</span>
+                    <span style="color: #2d3748; font-weight: 600;">0.001 BNB</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: #718096;">Total</span>
+                    <span style="color: #2d3748; font-weight: 600;" id="sendTotal">0.001 BNB</span>
+                </div>
+            </div>
+
+            <div class="send-actions">
+                <button id="cancelSendBtn" class="send-action-btn cancel">
+                    Cancel
+                </button>
+                <button id="confirmSendBtn" class="send-action-btn confirm">
+                    <i class="fas fa-paper-plane"></i> Send Now
+                </button>
+            </div>
+        </div>
+    </div>
         <!-- Assets List -->
         <div class="assets-section">
             <h5>Assets</h5>
@@ -6590,7 +6638,56 @@ function startChatWithUser(user) {
                 }, 2000);
             }
         });
+   function showSendModal() {
+            // Check if wallet is unlocked
+            if (!sessionStorage.getItem('laam_unlocked_addr')) {
+                alert('Please unlock your wallet first.');
+                showPasswordModal(true);
+                return;
+            }
+            
+            document.getElementById('sendModal').classList.remove('hidden');
+        }
 
+        function hideSendModal() {
+            document.getElementById('sendModal').classList.add('hidden');
+        }
+
+        function confirmSendTransaction() {
+            const amount = document.getElementById('sendAmount').value;
+            const recipient = document.getElementById('recipientAddress').value;
+            
+            if (!amount || !recipient) {
+                alert('Please enter both amount and recipient address.');
+                return;
+            }
+            
+            if (!web3.utils.isAddress(recipient)) {
+                alert('Please enter a valid BSC address.');
+                return;
+            }
+            
+            // In a real app, you would send the transaction here
+            alert(`Transaction submitted! Sending ${amount} BNB to ${recipient.substring(0, 10)}...`);
+            hideSendModal();
+            
+            // Add to transaction history
+            addTransactionToHistory({
+                type: 'send',
+                to: recipient,
+                amount: amount,
+                timestamp: new Date()
+            });
+        }
+
+        // Your existing updateWalletUI and addTransactionToHistory functions
+        async function updateWalletUI(address) {
+            // Your existing implementation
+        }
+
+        function addTransactionToHistory(transaction) {
+            // Your existing implementation
+                }     
 </script>
 </script>
 </body>
